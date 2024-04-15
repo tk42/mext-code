@@ -1,3 +1,5 @@
 streamlit
 httpx
 pandas
+openai
+unicodedata2
