@@ -70,7 +70,7 @@ def make_instruction(_input, _labels, limit):
     ----
     {_labels}
     ----
-    Answer format is JSON {reliability:0~1, output:[{code: , text: }]}. Even if you are not sure, qualify the reliability and recommend a proper category.
+    Answer format is JSON like {reliability:0~1, output:[{code: , text: }]}. Even if you are not sure, qualify the reliability and recommend a proper category.
     """
     return (
         instruction.replace("{_input}", str(_input))
@@ -98,13 +98,13 @@ def on_submit():
     )
 
     raw_result = unicodedata.normalize("NFKC", completion.choices[0].message.content)
-    result = eval(raw_result)
-    if "reliability" not in result:
-        st.error("エラーが発生しました {result}")
-        return
-    reliability = result["reliability"]
-    output = result["output"]
     try:
+        result = eval(raw_result)
+        if "reliability" not in result:
+            st.error("エラーが発生しました {result}")
+            return
+        reliability = result["reliability"]
+        output = result["output"]
         df = pd.DataFrame(output)
         with container:
             st.table(df)
@@ -116,6 +116,7 @@ def on_submit():
                 st.warning(f"信頼度：{reliability}", icon="❌")
     except Exception as e:
         st.error(f"エラーが発生しました：{e}")
+        st.write(raw_result)
 
 
 with st.form(key="input_form"):
