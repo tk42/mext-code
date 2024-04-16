@@ -100,9 +100,6 @@ def on_submit():
     raw_result = unicodedata.normalize("NFKC", completion.choices[0].message.content)
     try:
         result = eval(raw_result)
-        if "reliability" not in result:
-            st.error("エラーが発生しました {result}")
-            return
         reliability = result["reliability"]
         output = result["output"]
         df = pd.DataFrame(output)
@@ -134,4 +131,4 @@ with st.form(key="input_form"):
         use_container_width=False,
     )
 
-container = st.container(height=300, border=None)
+container = st.container(height=500, border=None)
