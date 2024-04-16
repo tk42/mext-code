@@ -51,7 +51,7 @@ goal = st.sidebar.multiselect(
         "内容（大項目）",
         "各科目",
     ][int(x)],
-    default=["4", "5"],
+    default=["3"],
 )
 
 limit = st.sidebar.number_input("最大ラベル数", min_value=1, max_value=10, value=3)
