@@ -59,7 +59,9 @@ limit = st.sidebar.number_input("最大ラベル数", min_value=1, max_value=10,
 data = read_by_subject(school=school, subject=subject, goal=goal, limit=None)
 st.sidebar.write(f"{len(data['data']['codes'])} 件のラベルが対象")
 
-st.sidebar.selectbox("モデル選択", ("gpt-3.5-turbo", "gpt-4", "gpt-4-turbo"), index=0)
+model = st.sidebar.selectbox(
+    "モデル選択", ("gpt-3.5-turbo", "gpt-4", "gpt-4-turbo"), index=0
+)
 
 
 def make_instruction(_input, _labels, limit):
@@ -68,8 +70,7 @@ def make_instruction(_input, _labels, limit):
     ----
     {_labels}
     ----
-    Answer format is JSON {reliability:0~1, output:[{code: , text: }]}. 
-    Even if you are not sure, qualify the reliability and recommend a proper category.
+    Answer format is JSON {reliability:0~1, output:[{code: , text: }]}. Even if you are not sure, qualify the reliability and recommend a proper category.
     """
     return (
         instruction.replace("{_input}", str(_input))
@@ -83,7 +84,7 @@ def on_submit():
     labels = data["data"]["codes"]
     instruction = make_instruction(input_txt, labels, limit)
     completion = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model=model,
         messages=[
             {
                 "role": "system",
@@ -120,7 +121,7 @@ def on_submit():
 with st.form(key="input_form"):
     input_txt = st.text_area(
         "問題文を入力してください",
-        "tan 1° は有理数か？",
+        "-4+7を計算しなさい",
     )
 
     st.form_submit_button(
